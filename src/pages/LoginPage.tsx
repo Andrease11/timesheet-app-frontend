@@ -1,4 +1,4 @@
-import { loginForAccessTokenUsersTokenPost, readUserMeUsersMeGet } from '../client/sdk.gen';
+import { loginTokenAuthTokenPost, readUserMeUsersMeGet } from '../client/sdk.gen';
 import { client } from '../client/client.gen';
 import useAuthStore from '../zustand/AuthStore';
 import { useState, useEffect } from 'react';
@@ -11,13 +11,12 @@ export function LoginPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
-  // Check for existing token on component mount
   useEffect(() => {
-    const checkToken = async () => {
+    const checkToken = async (): Promise<void> => {
       if (token) {
         try {
           client.setConfig({
-            auth: () => token
+            auth: (): string => token
           });
           const result = await readUserMeUsersMeGet();
 
@@ -33,10 +32,10 @@ export function LoginPage() {
     checkToken();
   }, [token, navigate, client]); const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(''); // Clear any previous errors
+    setError('');
 
     try {
-      let response = await loginForAccessTokenUsersTokenPost({
+      let response = await loginTokenAuthTokenPost({
         body: {
           username: email,
           password: password,
@@ -44,7 +43,6 @@ export function LoginPage() {
         }
       });
 
-      // Only proceed if we have a valid token
       if (response.data && response.data.access_token) {
         setToken(response.data.access_token);
         setEmail(email);
@@ -54,7 +52,6 @@ export function LoginPage() {
         });
         navigate('/login/calendar');
       } else {
-        // If we don't get a token in the response
         setError('Authentication failed. Please try again.');
         console.error("No valid token received");
       }
