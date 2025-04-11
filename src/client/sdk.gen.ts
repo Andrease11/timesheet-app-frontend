@@ -111,11 +111,7 @@ export const getShiftShiftGetGet = <ThrowOnError extends boolean = false>(option
             }
         ],
         url: '/shift/get',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options?.headers
-        }
+        ...options
     });
 };
 

@@ -172,9 +172,11 @@ export type GetShiftsShiftGetMoreGetResponses = {
 export type GetShiftsShiftGetMoreGetResponse = GetShiftsShiftGetMoreGetResponses[keyof GetShiftsShiftGetMoreGetResponses];
 
 export type GetShiftShiftGetGetData = {
-    body: ShiftModel;
+    body?: never;
     path?: never;
-    query?: never;
+    query: {
+        id: string;
+    };
     url: '/shift/get';
 };
 
